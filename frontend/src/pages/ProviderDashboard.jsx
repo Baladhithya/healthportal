@@ -261,6 +261,7 @@ const ProviderDashboard = () => {
                                   )}
                                 </div>
                               </div>
+                              </div> 
                             ) : null}
                           </div>
                         </td>
