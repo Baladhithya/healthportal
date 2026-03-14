@@ -121,20 +121,18 @@ const GoalTracker = () => {
   };
 
   const handleValueChange = (e) => {
-    const val = e.target.value;
-
-    if (val === '' || /^\d{0,5}$/.test(val)) {
-      setFormData((p) => ({ ...p, value: val }));
-    }
-  };
+  const val = e.target.value;
+  if (/^\d*$/.test(val) && val.length <= 5) {
+    setFormData((p) => ({ ...p, value: val }));
+  }
+};
 
   const handleTargetChange = (e) => {
-    const val = e.target.value;
-
-    if (val === '' || /^\d{0,5}$/.test(val)) {
-      setFormData((p) => ({ ...p, target: val }));
-    }
-  };
+  const val = e.target.value;
+  if (/^\d*$/.test(val) && val.length <= 5) {
+    setFormData((p) => ({ ...p, target: val }));
+  }
+};
 
   return (
     <div className="page-container">
