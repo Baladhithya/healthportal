@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 jobs:
+
   backend-test:
     runs-on: ubuntu-latest
 
@@ -18,7 +19,7 @@ jobs:
       NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
       PORT: 5000
       NODE_ENV: test
-      CORS_ORIGIN: http://localhost:5173
+      CORS_ORIGIN: https://healthportal-frontend.vercel.app
 
     steps:
       - name: Checkout code
@@ -45,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VITE_API_URL: https://healthportal-1-123s.onrender.com/
+      VITE_API_URL: https://healthportal-1-123s.onrender.com
 
     steps:
       - name: Checkout code
