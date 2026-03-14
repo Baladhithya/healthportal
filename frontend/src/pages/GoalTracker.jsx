@@ -265,6 +265,7 @@ const GoalTracker = () => {
                     inputMode="numeric"
                     value={formData.target}
                     onChange={handleTargetChange}
+                      maxLength={5}                
                     placeholder={`Optional. Default: ${defaults[formData.goalType]}`}
                   />
                 </div>
@@ -277,6 +278,7 @@ const GoalTracker = () => {
                     inputMode="numeric"
                     value={formData.value}
                     onChange={handleValueChange}
+                      maxLength={5}                  
                     placeholder="e.g., 8000"
                     required
                   />
