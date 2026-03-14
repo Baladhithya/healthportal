@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VITE_API_URL: https://healthportal-backend.onrender.com
+      VITE_API_URL: https://healthportal-1-123s.onrender.com/
 
     steps:
       - name: Checkout code
