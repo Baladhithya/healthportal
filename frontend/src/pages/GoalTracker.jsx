@@ -49,8 +49,7 @@ const GoalTracker = () => {
       fetchGoals();
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-  console.error(err);
-  setMessage(err?.response?.data?.message || 'Failed to add goal. ❌');
+      setMessage('Failed to log goal. ❌');
     } finally {
       setSubmitting(false);
     }
@@ -65,9 +64,8 @@ const GoalTracker = () => {
       setShowReminderForm(false);
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-  console.error(err);
-  setMessage(err?.response?.data?.message || 'Failed to create reminder. ❌');
-}
+      setMessage('Failed to create reminder. ❌');
+    }
   };
 
   const goalConfig = {
@@ -144,13 +142,18 @@ const GoalTracker = () => {
                 </div>
                 <div className="form-group">
                   <label>Actual Value Completed</label>
-                  <input
-                    type="number"
-                    value={formData.value}
-                    onChange={(e) => setFormData((p) => ({ ...p, value: e.target.value }))}
-                    placeholder={`e.g., 8000`}
-                    required
-                  />
+                    <input
+    type="number"
+    value={formData.value}
+    onChange={(e) => {
+      const val = e.target.value;
+      if (val.length <= 5) {
+        setFormData((p) => ({ ...p, value: val }));
+      }
+    }}
+    placeholder="e.g., 8000"
+    required
+  />
                 </div>
               </div>
               <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem' }} disabled={submitting}>
