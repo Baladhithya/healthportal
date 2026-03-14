@@ -142,13 +142,18 @@ const GoalTracker = () => {
                 </div>
                 <div className="form-group">
                   <label>Actual Value Completed</label>
-                  <input
-                    type="number"
-                    value={formData.value}
-                    onChange={(e) => setFormData((p) => ({ ...p, value: e.target.value }))}
-                    placeholder={`e.g., 8000`}
-                    required
-                  />
+                    <input
+    type="number"
+    value={formData.value}
+    onChange={(e) => {
+      const val = e.target.value;
+      if (val.length <= 5) {
+        setFormData((p) => ({ ...p, value: val }));
+      }
+    }}
+    placeholder="e.g., 8000"
+    required
+  />
                 </div>
               </div>
               <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem' }} disabled={submitting}>
