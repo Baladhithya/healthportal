@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Home, LayoutDashboard, Target, User as UserIcon, Info, LogOut, CheckSquare } from 'lucide-react';
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
@@ -12,15 +13,18 @@ const Sidebar = () => {
   };
 
   const patientLinks = [
-    { to: '/dashboard', icon: '📊', label: 'Dashboard' },
-    { to: '/goals', icon: '🎯', label: 'Goal Tracker' },
-    { to: '/profile', icon: '👤', label: 'Profile' },
-    { to: '/health-info', icon: 'ℹ️', label: 'Health Info' },
+    { to: '/home', icon: <Home size={20} />, label: 'Home' },
+    { to: '/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+    { to: '/goals', icon: <Target size={20} />, label: 'Goal Tracker' },
+    { to: '/profile', icon: <UserIcon size={20} />, label: 'Profile' },
+    { to: '/health-info', icon: <Info size={20} />, label: 'Health Info' },
   ];
 
   const providerLinks = [
-    { to: '/provider', icon: '📋', label: 'Dashboard' },
-    { to: '/health-info', icon: 'ℹ️', label: 'Health Info' },
+    { to: '/home', icon: <Home size={20} />, label: 'Home' },
+    { to: '/provider', icon: <CheckSquare size={20} />, label: 'Patient Compliance' },
+    { to: '/profile', icon: <UserIcon size={20} />, label: 'Profile' },
+    { to: '/health-info', icon: <Info size={20} />, label: 'Health Info' },
   ];
 
   const links = user?.role === 'provider' ? providerLinks : patientLinks;
@@ -55,7 +59,7 @@ const Sidebar = () => {
       </div>
 
       <button className={styles.logoutBtn} onClick={handleLogout}>
-        <span className={styles.navIcon}>🚪</span>
+        <span className={styles.navIcon}><LogOut size={20} /></span>
         Logout
       </button>
     </aside>

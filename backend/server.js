@@ -9,6 +9,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const patientRoutes = require('./routes/patient');
 const providerRoutes = require('./routes/provider');
+const newsRoutes = require('./routes/news');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(morgan('combined'));
 app.use('/api/auth', authRoutes);
 app.use('/api/patient', patientRoutes);
 app.use('/api/provider', providerRoutes);
+app.use('/api/news', newsRoutes);
 
 // ─── Health Check ────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

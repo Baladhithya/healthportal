@@ -25,6 +25,16 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const { data } = await api.post('/api/auth/login', { email, password });
+    if (data.requires2FA) return data;
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    setUser(data.user);
+    return data;
+  };
+
+  const validate2FA = async (userId, token) => {
+    const { data } = await api.post('/api/auth/2fa/validate', { userId, token });
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     localStorage.setItem('user', JSON.stringify(data.user));
@@ -45,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, validate2FA, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

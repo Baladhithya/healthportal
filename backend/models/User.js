@@ -40,6 +40,26 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
+  licenseKey: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
+  hospitalName: {
+    type: String,
+    trim: true
+  },
+  mobileNumber: {
+    type: String,
+    trim: true
+  },
+  isTwoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
+  twoFactorSecret: {
+    type: String
+  },
   createdAt: {
     type: Date,
     default: Date.now

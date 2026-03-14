@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Home from './pages/Home';
 import PatientDashboard from './pages/PatientDashboard';
 import GoalTracker from './pages/GoalTracker';
 import Profile from './pages/Profile';
@@ -13,7 +14,7 @@ const HomeRedirect = () => {
   const { user, loading } = useAuth();
   if (loading) return <div className="loading-container"><div className="spinner" /></div>;
   if (!user) return <Navigate to="/login" replace />;
-  return <Navigate to={user.role === 'provider' ? '/provider' : '/dashboard'} replace />;
+  return <Navigate to="/home" replace />;
 };
 
 function App() {
@@ -25,6 +26,13 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/health-info" element={<HealthInfo />} />
+
+          {/* Protected Common */}
+          <Route path="/home" element={
+            <ProtectedRoute allowedRoles={['patient', 'provider']}>
+              <Home />
+            </ProtectedRoute>
+          } />
 
           {/* Patient Routes */}
           <Route path="/dashboard" element={
@@ -38,7 +46,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/profile" element={
-            <ProtectedRoute allowedRoles={['patient']}>
+            <ProtectedRoute allowedRoles={['patient', 'provider']}>
               <Profile />
             </ProtectedRoute>
           } />

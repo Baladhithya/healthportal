@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import styles from './Auth.module.css';
+import { Mail, Lock, User, Calendar, HeartPulse, Building } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const Register = () => {
     email: '',
     password: '',
     dateOfBirth: '',
+    hospitalName: '',
     role: 'patient',
     consentGiven: false,
   });
@@ -20,31 +22,19 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    if (!formData.consentGiven) {
-      setError('You must consent to data collection to register.');
-      return;
-    }
-
     setLoading(true);
 
     try {
       await register(formData);
       navigate('/login');
     } catch (err) {
-      const msg = err.response?.data?.error ||
-        err.response?.data?.errors?.map((e) => e.msg).join(', ') ||
-        'Registration failed.';
-      setError(msg);
+      setError(err.response?.data?.error || err.response?.data?.errors?.[0]?.msg || 'Registration failed.');
     } finally {
       setLoading(false);
     }
@@ -52,128 +42,99 @@ const Register = () => {
 
   return (
     <div className={styles.authPage}>
-      <div className={styles.authCard}>
+      <div className={styles.authCard} style={{ maxWidth: '550px' }}>
         <div className={styles.authHeader}>
           <div className={styles.authLogo}>
-            <div className={styles.authLogoIcon}>🏥</div>
-            <span className={styles.authLogoText}>HealthPortal</span>
+            <div className={styles.authLogoIcon}><HeartPulse color="#fff" size={28} /></div>
           </div>
-          <h1 className={styles.authTitle}>Create Account</h1>
-          <p className={styles.authSubtitle}>Join the wellness community</p>
+          <h1 className={styles.authTitle}>Create an Account</h1>
+          <p className={styles.authSubtitle}>Join HealthPortal today.</p>
         </div>
 
-        {error && <div className="alert alert-error">⚠️ {error}</div>}
+        {error && <div className="alert alert-error">{error}</div>}
 
-        {/* Role Tabs */}
         <div className={styles.roleTabs}>
           <button
-            type="button"
             className={`${styles.roleTab} ${formData.role === 'patient' ? styles.roleTabActive : ''}`}
-            onClick={() => setFormData((prev) => ({ ...prev, role: 'patient' }))}
+            onClick={() => setFormData({ ...formData, role: 'patient' })}
           >
-            🩺 Patient
+            Patient
           </button>
           <button
-            type="button"
             className={`${styles.roleTab} ${formData.role === 'provider' ? styles.roleTabActive : ''}`}
-            onClick={() => setFormData((prev) => ({ ...prev, role: 'provider' }))}
+            onClick={() => setFormData({ ...formData, role: 'provider' })}
           >
-            👨‍⚕️ Provider
+            Healthcare Provider
           </button>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="form-row">
-            <div className="form-group">
+            <div className={`form-group ${styles.inputWrapper}`}>
               <label htmlFor="firstName">First Name</label>
-              <input
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                placeholder="John"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <User className={styles.inputIcon} size={18} />
+                <input id="firstName" name="firstName" type="text" value={formData.firstName} onChange={handleChange} required style={{ paddingLeft: '2.5rem' }} />
+              </div>
             </div>
-            <div className="form-group">
+            <div className={`form-group ${styles.inputWrapper}`}>
               <label htmlFor="lastName">Last Name</label>
-              <input
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Doe"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <User className={styles.inputIcon} size={18} />
+                <input id="lastName" name="lastName" type="text" value={formData.lastName} onChange={handleChange} required style={{ paddingLeft: '2.5rem' }} />
+              </div>
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="you@example.com"
-              required
-            />
+          <div className="form-row">
+            <div className={`form-group ${styles.inputWrapper}`}>
+              <label htmlFor="email">Email Address</label>
+              <div style={{ position: 'relative' }}>
+                <Mail className={styles.inputIcon} size={18} />
+                <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required style={{ paddingLeft: '2.5rem' }} />
+              </div>
+            </div>
+            <div className={`form-group ${styles.inputWrapper}`}>
+              <label htmlFor="dateOfBirth">Date of Birth</label>
+              <div style={{ position: 'relative' }}>
+                <Calendar className={styles.inputIcon} size={18} />
+                <input id="dateOfBirth" name="dateOfBirth" type="date" value={formData.dateOfBirth} onChange={handleChange} required style={{ paddingLeft: '2.5rem' }} />
+              </div>
+            </div>
           </div>
 
-          <div className="form-group">
+          <div className={`form-group ${styles.inputWrapper}`}>
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Min 8 chars, uppercase, lowercase, number"
-              required
-            />
+            <div style={{ position: 'relative' }}>
+              <Lock className={styles.inputIcon} size={18} />
+              <input id="password" name="password" type="password" value={formData.password} onChange={handleChange} placeholder="Min 8 chars, 1 uppercase, 1 number" required style={{ paddingLeft: '2.5rem' }} />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="dateOfBirth">Date of Birth</label>
-            <input
-              id="dateOfBirth"
-              name="dateOfBirth"
-              type="date"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-            />
-          </div>
+          {formData.role === 'provider' && (
+            <div className={`form-group ${styles.inputWrapper}`}>
+              <label htmlFor="hospitalName">Hospital / Clinic Name</label>
+              <div style={{ position: 'relative' }}>
+                <Building className={styles.inputIcon} size={18} />
+                <input id="hospitalName" name="hospitalName" type="text" value={formData.hospitalName} onChange={handleChange} placeholder="e.g., General Hospital" required style={{ paddingLeft: '2.5rem' }} />
+              </div>
+            </div>
+          )}
 
-          {/* Consent Checkbox */}
           <div className={styles.consentGroup}>
-            <input
-              id="consent"
-              name="consentGiven"
-              type="checkbox"
-              checked={formData.consentGiven}
-              onChange={handleChange}
-            />
-            <label htmlFor="consent" className={styles.consentText}>
-              I consent to the collection and processing of my health data as
-              described in the <Link to="/health-info">Privacy Policy</Link>.
-              I understand that my data will be stored securely and used solely
-              for providing wellness and preventive care services.
+            <input id="consentGiven" name="consentGiven" type="checkbox" checked={formData.consentGiven} onChange={handleChange} required />
+            <label htmlFor="consentGiven" className={styles.consentText}>
+              I consent to the collection and processing of my health information as outlined in the <Link to="/health-info" target="_blank">Privacy Policy</Link>.
             </label>
           </div>
 
-          <button
-            type="submit"
-            className={`btn btn-primary ${styles.submitBtn}`}
-            disabled={loading}
-          >
-            {loading ? 'Creating Account...' : 'Create Account'}
+          <button type="submit" className={`btn btn-primary ${styles.submitBtn}`} disabled={loading}>
+            {loading ? 'Creating Account...' : 'Register'}
           </button>
         </form>
 
         <div className={styles.authFooter}>
-          Already have an account?{' '}
-          <Link to="/login">Sign in</Link>
+          Already have an account? <Link to="/login">Sign in</Link>
         </div>
       </div>
     </div>

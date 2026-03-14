@@ -6,6 +6,7 @@ const auditLogger = require('../middleware/auditLogger');
 const PatientProfile = require('../models/PatientProfile');
 const WellnessGoal = require('../models/WellnessGoal');
 const Reminder = require('../models/Reminder');
+const AssignmentRequest = require('../models/AssignmentRequest');
 
 const router = express.Router();
 
@@ -36,10 +37,23 @@ router.get(
   auditLogger('VIEW_PROFILE', 'patient_profile'),
   async (req, res) => {
     try {
-      let profile = await PatientProfile.findOne({ userId: req.user.userId });
+      let profile = await PatientProfile.findOne({ userId: req.user.userId }).lean();
       if (!profile) {
-        profile = await PatientProfile.create({ userId: req.user.userId });
+        const newProfile = await PatientProfile.create({ userId: req.user.userId });
+        profile = newProfile.toObject();
       }
+
+      const User = require('../models/User');
+      const user = await User.findById(req.user.userId).populate('assignedProviderIds', 'firstName lastName email hospitalName mobileNumber');
+      profile.assignedProviders = user.assignedProviderIds;
+
+      const pendingRequests = await AssignmentRequest.find({
+        patientId: req.user.userId,
+        status: 'pending'
+      }).populate('providerId', 'firstName lastName email hospitalName mobileNumber');
+      
+      profile.pendingRequests = pendingRequests.map(req => req.providerId);
+
       res.json(profile);
     } catch (error) {
       console.error('Get profile error:', error);
@@ -72,6 +86,53 @@ router.put(
       res.json(profile);
     } catch (error) {
       console.error('Update profile error:', error);
+      res.status(500).json({ error: 'Server error.' });
+    }
+  }
+);
+
+// ─── POST /api/patient/assignment-requests ──────────────────────────
+router.post(
+  '/assignment-requests',
+  auditLogger('CREATE_ASSIGNMENT_REQUEST', 'patient_profile'),
+  async (req, res) => {
+    try {
+      const { licenseKey } = req.body;
+      if (!licenseKey) return res.status(400).json({ error: 'License key is required' });
+
+      const User = require('../models/User');
+      const provider = await User.findOne({ licenseKey, role: 'provider' });
+      
+      if (!provider) {
+        return res.status(404).json({ error: 'No provider found with that license key' });
+      }
+
+      // Check if already assigned
+      const me = await User.findById(req.user.userId);
+      if (me.assignedProviderIds.includes(provider._id)) {
+        return res.status(400).json({ error: 'You are already assigned to this provider' });
+      }
+
+      // Check if a pending request already exists
+      const existingRequest = await AssignmentRequest.findOne({
+        patientId: req.user.userId,
+        providerId: provider._id,
+        status: 'pending'
+      });
+
+      if (existingRequest) {
+        return res.status(400).json({ error: 'Assignment request already pending' });
+      }
+
+      const assignmentReq = await AssignmentRequest.create({
+        patientId: req.user.userId,
+        providerId: provider._id,
+        status: 'pending'
+      });
+
+      res.status(201).json({ success: true, message: 'Assignment request sent', request: assignmentReq });
+    } catch (error) {
+      console.error('Create assignment request error:', error);
       res.status(500).json({ error: 'Server error.' });
     }
   }
