@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: healthportal-backend
+    runtime: node
+    buildCommand: cd backend && npm ci
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_ACCESS_EXPIRY
+        value: 15m
+      - key: JWT_REFRESH_EXPIRY
+        value: 7d
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        sync: false
+
+  - type: web
+    name: healthportal-frontend
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false

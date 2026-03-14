@@ -1,0 +1,134 @@
+.dashboard {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.goalCard {
+  padding: 1.5rem;
+}
+
+.goalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.goalIcon {
+  font-size: 2rem;
+}
+
+.goalType {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.goalValues {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.goalCurrent {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.goalTarget {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.section {
+  margin-top: 0.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reminderItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.reminderItem:last-child {
+  border-bottom: none;
+}
+
+.reminderItem:hover {
+  background: rgba(14, 165, 233, 0.04);
+}
+
+.reminderLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.reminderIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: rgba(14, 165, 233, 0.1);
+}
+
+.reminderTitle {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.reminderDate {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.tipCard {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(99, 102, 241, 0.08));
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  padding: 1.5rem;
+}
+
+.tipCategory {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.tipText {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
